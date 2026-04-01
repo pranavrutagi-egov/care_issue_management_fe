@@ -4,26 +4,24 @@ import path from "path";
 import react from "@vitejs/plugin-react-swc";
 import tailwindcss from "@tailwindcss/vite";
 
+import { cloudflare } from "@cloudflare/vite-plugin";
+
 export default defineConfig({
-  plugins: [
-    federation({
-      name: "care_issue_management",
-      filename: "remoteEntry.js",
-      exposes: {
-        "./manifest": "./src/manifest.tsx",
-      },
-      shared: [
-        "react",
-        "react-dom",
-        "react-i18next",
-        "@tanstack/react-query",
-        "raviger",
-        "sonner",
-      ],
-    }),
-    tailwindcss(),
-    react(),
-  ],
+  plugins: [federation({
+    name: "care_issue_management",
+    filename: "remoteEntry.js",
+    exposes: {
+      "./manifest": "./src/manifest.tsx",
+    },
+    shared: [
+      "react",
+      "react-dom",
+      "react-i18next",
+      "@tanstack/react-query",
+      "raviger",
+      "sonner",
+    ],
+  }), tailwindcss(), react(), cloudflare()],
   build: {
     target: "esnext",
     minify: true,
