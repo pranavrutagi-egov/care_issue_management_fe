@@ -1,14 +1,14 @@
-import { ShuffleIcon } from "lucide-react";
+import { lazy } from "react";
+
 const manifest = {
-  plugin: "care_quick_assign",
+  plugin: "care_issue_management",
   extends: [],
-  components: {},
-  navItems: [
-    {
-      name: "Plugin Demo",
-      icon: <ShuffleIcon className="care-svg-icon__baseline" />,
-    },
-  ],
+  components: {
+    CareIssueManagementWidget: lazy(
+      () => import("./providers"),
+    ),
+  },
+  navItems: [],
 };
 
 export default manifest;
