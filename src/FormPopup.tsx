@@ -12,6 +12,23 @@ export default function FormPopup({ onClose }: FormPopupProps) {
   const [description, setDescription] = useState("");
   const [files, setFiles] = useState<File[]>([]);
 
+  // ✅ Issue options added
+  const issueOptions = [
+    "OPD Wait Time",
+    "Lab Result Delay",
+    "Bed Not Available",
+    "Billing Issue",
+    "Staff Behaviour",
+    "Medicine Not Available",
+    "Food Quality Issue",
+    "Cleanliness Issue",
+    "Login Issue",
+    "System Slow",
+    "Data Not Saving",
+    "Report Generation Error",
+    "Printer Issue",
+  ];
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setFiles([...files, ...Array.from(e.target.files)]);
@@ -22,19 +39,41 @@ export default function FormPopup({ onClose }: FormPopupProps) {
     setFiles(files.filter((_, i) => i !== idx));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ title, description, files });
+
+    const payload = {
+      title,
+      description,
+    };
+
+    try {
+      const response = await fetch("http://localhost:9000/api/issue_flow/issues/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("care_access_token")}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log("Issue saved:", data);
+      } else {
+        console.error("Backend error:", data);
+      }
+    } catch (err) {
+      console.error("Network error:", err);
+    }
+
     onClose();
   };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      
-      {/* 🔥 Bigger + cleaner container */}
       <div className="bg-white rounded-xl p-8 w-[520px] max-w-full relative shadow-2xl flex flex-col gap-6">
-        
-        {/* Close Button */}
         <button
           className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
           onClick={onClose}
@@ -45,19 +84,27 @@ export default function FormPopup({ onClose }: FormPopupProps) {
         <h2 className="text-2xl font-semibold text-center">Submit Issue</h2>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-
-          {/* 🔥 Title */}
           <div className="flex flex-col gap-2">
             <Label className="text-sm font-medium">Title</Label>
-            <Input
-              placeholder="Enter issue title"
+
+            {/* ✅ Replaced Input with dropdown */}
+            <select
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
-            />
+              className="w-full border rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="" disabled>
+                Select issue type
+              </option>
+              {issueOptions.map((issue, idx) => (
+                <option key={idx} value={issue}>
+                  {issue}
+                </option>
+              ))}
+            </select>
           </div>
 
-          {/* 🔥 Description */}
           <div className="flex flex-col gap-2">
             <Label className="text-sm font-medium">Description</Label>
             <textarea
@@ -70,7 +117,6 @@ export default function FormPopup({ onClose }: FormPopupProps) {
             />
           </div>
 
-          {/* 🔥 File Upload */}
           <div className="flex flex-col gap-2">
             <Label className="text-sm font-medium">Attach Files</Label>
             <Input type="file" multiple onChange={handleFileChange} />
@@ -110,7 +156,6 @@ export default function FormPopup({ onClose }: FormPopupProps) {
             )}
           </div>
 
-          {/* 🔥 Submit */}
           <Button type="submit" className="bg-green-500 hover:bg-green-600">
             Submit Issue
           </Button>
