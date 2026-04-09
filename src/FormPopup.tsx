@@ -12,7 +12,6 @@ export default function FormPopup({ onClose }: FormPopupProps) {
   const [description, setDescription] = useState("");
   const [files, setFiles] = useState<File[]>([]);
 
-  // ✅ Issue options added
   const issueOptions = [
     "OPD Wait Time",
     "Lab Result Delay",
@@ -86,8 +85,6 @@ export default function FormPopup({ onClose }: FormPopupProps) {
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <div className="flex flex-col gap-2">
             <Label className="text-sm font-medium">Title</Label>
-
-            {/* ✅ Replaced Input with dropdown */}
             <select
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -156,7 +153,21 @@ export default function FormPopup({ onClose }: FormPopupProps) {
             )}
           </div>
 
-          <Button type="submit" className="bg-green-500 hover:bg-green-600">
+          <Button
+            type="submit"
+            style={{
+              backgroundColor: "transparent",
+              backgroundImage: "linear-gradient(in oklab, rgb(4, 108, 78) 0%, rgb(3, 84, 63) 100%)",
+              borderColor: "rgb(1, 71, 55)",
+              borderWidth: "0.8px",
+              borderStyle: "solid",
+              borderRadius: "6px",
+              boxShadow: "0px 10px 15px -3px rgba(0,0,0,0.1), 0px 4px 6px -4px rgba(0,0,0,0.1)",
+              color: "rgb(255, 255, 255)",
+              columnGap: "8px",
+            }}
+            className="hover:opacity-90 transition-opacity"
+          >
             Submit Issue
           </Button>
         </form>
