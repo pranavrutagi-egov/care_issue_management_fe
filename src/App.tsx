@@ -97,7 +97,9 @@ export default function App() {
       />
 
       {isFormOpen && (
-        <FormPopup onClose={() => setIsFormOpen(false)} />
+        <FormPopup onClose={() => setIsFormOpen(false)}
+        screenShots={screenShots}
+         />
       )}
     </div>
   );
