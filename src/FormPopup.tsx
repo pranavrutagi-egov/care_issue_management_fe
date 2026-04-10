@@ -8,13 +8,6 @@ interface FormPopupProps {
   screenShots?: string[];
 }
 
-// ✅ ADDED: defined allowed MIME types as a Set outside the component so it's
-// not recreated on every render. This is the real enforcement gate — the
-// `accept` attribute on the input only filters the file picker UI, but a user
-// can bypass that by switching to "All Files" in the dialog. This Set check
-// runs in JavaScript regardless of how the file was selected, so there's no
-// way around it. Using a Set (vs an array) makes the lookup O(1) and is easy
-// to extend — just add a new string if you ever need to allow another format.
 const ALLOWED_TYPES = new Set([
   "image/png",
   "image/jpeg",
@@ -46,13 +39,6 @@ const [fileError, setFileError] = useState(false);
     "Printer Issue",
   ];
 
-  // ✅ CHANGED: added two-layer file validation here.
-  // Layer 1 (outer door) — the `accept` attribute on the <Input> below filters
-  // what the file picker shows by default, guiding the user toward images.
-  // Layer 2 (inner door, this function) — filters selected files against
-  // ALLOWED_TYPES before they ever enter state. Any file that slips past the
-  // picker UI (e.g. by choosing "All Files") gets silently dropped here,
-  // and the user is informed via an alert so they're never left confused.
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const selected = Array.from(e.target.files);
@@ -73,12 +59,7 @@ const [fileError, setFileError] = useState(false);
     setCapturedScreenshots((prev) => prev.filter((_, i) => i !== idx));
   };
 
-  // ✅ ADDED: build a single unified preview array from both states at render time.
-  // Think of `files` and `capturedScreenshots` as two separate ingredient bowls —
-  // this array is the plate where we combine them just before serving.
-  // We do this here (outside JSX) to keep the template clean and readable.
-  // The `kind` field is the key detail — it tells the ✕ button which bowl
-  // the item originally came from, so it knows which state to update on removal.
+  
   const previewItems = [
     ...files.map((file, idx) => ({
       kind: "file" as const,
@@ -182,10 +163,7 @@ const [fileError, setFileError] = useState(false);
           <div className="flex flex-col gap-2">
             <Label className="text-sm font-medium">Attach Files</Label>
 
-            {/* ✅ CHANGED: added `accept` to restrict the file picker UI to image
-                formats only. This is the outer door — it makes the picker default
-                to showing only images. The real enforcement happens in
-                handleFileChange above via the ALLOWED_TYPES check. */}
+            {}
             <Input
               type="file"
               multiple
@@ -198,10 +176,7 @@ const [fileError, setFileError] = useState(false);
   </p>
 )}
 
-            {/* ✅ CHANGED: replaced the old `files.map(...)` block with a single
-                unified grid that renders previewItems — which contains both uploaded
-                files and captured screenshots merged together.
-                The user sees one consistent grid regardless of the source. */}
+            {}
             {previewItems.length > 0 && (
               <div className="flex flex-wrap gap-3 mt-2">
                 {previewItems.map((item, i) => (
@@ -223,17 +198,14 @@ const [fileError, setFileError] = useState(false);
                       </div>
                     )}
 
-                    {/* ✅ ADDED: small label only on screenshots so the user can
-                        visually distinguish them from manually uploaded files */}
+                    {}
                     {item.kind === "screenshot" && (
                       <span className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-[10px] text-center py-0.5">
                         Screenshot
                       </span>
                     )}
 
-                    {/* ✅ CHANGED: the ✕ button now checks `kind` to decide which
-                        state to update — removeFile for uploads, removeScreenshot
-                        for captures. The two source states stay fully independent. */}
+                    {}
                     <button
                       type="button"
                       className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"

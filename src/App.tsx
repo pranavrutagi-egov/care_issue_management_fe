@@ -38,7 +38,7 @@ function IssueManagementWidget({
         align="end"
         className="flex flex-col-reverse gap-2 min-w-0 w-fit shadow-none ring-0 px-0"
       >
-        {/* 1️⃣ Screenshot */}
+        {}
         <Button
           variant="outline"
           size="icon"
@@ -48,7 +48,7 @@ function IssueManagementWidget({
           <CameraIcon className="text-white" />
         </Button>
 
-        {/* 2️⃣ Open Form */}
+        {}
         <Button
           variant="outline"
           size="icon"
@@ -58,7 +58,7 @@ function IssueManagementWidget({
           <NotebookPenIcon className="text-white" />
         </Button>
 
-        {/* 3️⃣ Extra Button (no change) */}
+        {}
         <Button
           variant="outline"
           size="icon"
